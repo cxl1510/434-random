@@ -1,0 +1,34 @@
+<view class="container">
+  <view class="header">
+    <text class="header-title">我的班级</text>
+    <view class="header-action" bindtap="openCreateModal">+ 创建班级</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty-state">加载中...</view>
+
+  <view wx:elif="{{classList.length === 0}}" class="empty-state">
+    <text>暂无班级，点击上方按钮创建</text>
+  </view>
+
+  <view wx:else class="class-list">
+    <view wx:for="{{classList}}" wx:key="_id" class="class-card" bindtap="goToDetail" data-id="{{item._id}}">
+      <view class="class-info">
+        <view class="class-name">{{item.name}}</view>
+        <view class="class-meta">{{item.studentsCount || 0}} 人 · {{item.createTime}}</view>
+      </view>
+      <view class="class-actions" catchtap="stopPropagation">
+        <text class="action-delete" catchtap="deleteClass" data-id="{{item._id}}">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showCreateModal}}" bindtap="closeCreateModal"></view>
+  <view class="modal" wx:if="{{showCreateModal}}">
+    <view class="modal-title">创建班级</view>
+    <input class="modal-input" placeholder="请输入班级名称" value="{{className}}" bindinput="onClassNameInput" />
+    <view class="modal-actions">
+      <button class="modal-btn cancel" bindtap="closeCreateModal">取消</button>
+      <button class="modal-btn confirm" bindtap="createClass">确定</button>
+    </view>
+  </view>
+</view>

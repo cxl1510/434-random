@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="class-header">
+    <view class="class-title">{{classInfo.name}}</view>
+    <view class="class-count">{{studentList.length}} 人</view>
+  </view>
+
+  <view class="action-bar">
+    <view class="action-btn primary" bindtap="goToRandomCall">开始点名</view>
+    <view class="action-btn" bindtap="goToHistory">历史记录</view>
+  </view>
+
+  <view class="section-title">
+    <text>学生名单</text>
+    <text class="add-link" bindtap="openAddModal">+ 添加学生</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty-state">加载中...</view>
+
+  <view wx:elif="{{studentList.length === 0}}" class="empty-state">
+    <text>暂无学生，点击上方添加</text>
+  </view>
+
+  <view wx:else class="student-list">
+    <view wx:for="{{studentList}}" wx:key="_id" class="student-item">
+      <view class="student-info">
+        <image class="student-avatar" src="{{item.avatar || '/images/avatar.png'}}" />
+        <text class="student-name">{{item.name}}</text>
+      </view>
+      <text class="delete-btn" catchtap="deleteStudent" data-id="{{item._id}}">删除</text>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showAddModal}}" bindtap="closeAddModal"></view>
+  <view class="modal" wx:if="{{showAddModal}}">
+    <view class="modal-title">添加学生</view>
+    <view class="mode-switch">
+      <view class="mode-item {{addMode === 'single' ? 'active' : ''}}" bindtap="switchAddMode" data-mode="single">单个添加</view>
+      <view class="mode-item {{addMode === 'batch' ? 'active' : ''}}" bindtap="switchAddMode" data-mode="batch">批量导入</view>
+    </view>
+    <view wx:if="{{addMode === 'single'}}">
+      <input class="modal-input" placeholder="请输入学生姓名" value="{{newStudentName}}" bindinput="onStudentNameInput" />
+      <button class="btn-primary" bindtap="addStudent">添加</button>
+    </view>
+    <view wx:if="{{addMode === 'batch'}}">
+      <textarea class="modal-textarea" placeholder="每行一个姓名，如：&#10;张三&#10;李四&#10;王五" value="{{batchNames}}" bindinput="onBatchInput" />
+      <button class="btn-primary" bindtap="batchAddStudents">批量添加</button>
+    </view>
+    <button class="btn-cancel" bindtap="closeAddModal">取消</button>
+  </view>
+</view>

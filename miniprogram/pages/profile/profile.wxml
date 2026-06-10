@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="profile-card">
+    <view class="avatar-wrap">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/avatar.png'}}" />
+    </view>
+    <view class="nickname">{{userInfo.nickName || '未设置昵称'}}</view>
+    <view class="role-tag">{{userInfo.role === 'teacher' ? '教师' : '学生'}}</view>
+    <view wx:if="{{!userInfo.nickName}}" class="set-profile" bindtap="getUserProfile">点击设置微信资料</view>
+  </view>
+
+  <view class="menu-card">
+    <view class="menu-title">角色切换</view>
+    <view class="role-list">
+      <view wx:for="{{roleOptions}}" wx:key="value"
+        class="role-item {{userInfo.role === item.value ? 'active' : ''}}"
+        bindtap="changeRole" data-value="{{item.value}}">
+        {{item.label}}
+      </view>
+    </view>
+  </view>
+
+  <view class="tip">
+    <text>当前角色决定了您的操作权限，教师可创建班级并进行点名。</text>
+  </view>
+</view>

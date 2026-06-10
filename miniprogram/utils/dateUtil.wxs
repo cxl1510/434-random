@@ -1,0 +1,12 @@
+var formatDate = function(dateObj) {
+  if (!dateObj) return '';
+  var d = getDate(dateObj);
+  var pad = function(n) {
+    return n < 10 ? '0' + n : n;
+  };
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+};
+
+module.exports = {
+  formatDate: formatDate
+};

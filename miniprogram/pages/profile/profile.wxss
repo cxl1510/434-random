@@ -1,0 +1,89 @@
+.container {
+  padding: 30rpx;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 50rpx 40rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.avatar-wrap {
+  margin-bottom: 20rpx;
+}
+
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: #E5E5E5;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.role-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #4A90D9, #5AC8FA);
+  color: #fff;
+  font-size: 24rpx;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.set-profile {
+  color: #4A90D9;
+  font-size: 28rpx;
+  padding: 10rpx;
+}
+
+.menu-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.menu-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24rpx;
+}
+
+.role-list {
+  display: flex;
+  gap: 20rpx;
+}
+
+.role-item {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  border-radius: 16rpx;
+  background: #F5F7FA;
+  color: #666;
+  font-size: 30rpx;
+}
+
+.role-item.active {
+  background: linear-gradient(135deg, #4A90D9, #5AC8FA);
+  color: #fff;
+  font-weight: bold;
+}
+
+.tip {
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
