@@ -5,6 +5,8 @@ Page({
     classList: [],
     showCreateModal: false,
     className: '',
+    showJoinModal: false,
+    shareCode: '',
     loading: false,
   },
 
@@ -71,6 +73,43 @@ Page({
     }).catch(err => {
       wx.hideLoading();
       wx.showToast({ title: '创建失败', icon: 'none' });
+    });
+  },
+
+  openJoinModal() {
+    this.setData({ showJoinModal: true, shareCode: '' });
+  },
+
+  closeJoinModal() {
+    this.setData({ showJoinModal: false });
+  },
+
+  onShareCodeInput(e) {
+    this.setData({ shareCode: e.detail.value.toUpperCase() });
+  },
+
+  joinClass() {
+    const shareCode = this.data.shareCode.trim();
+    if (!shareCode) {
+      wx.showToast({ title: '请输入分享码', icon: 'none' });
+      return;
+    }
+    wx.showLoading({ title: '加入中' });
+    wx.cloud.callFunction({
+      name: 'classManager',
+      data: { type: 'joinClass', data: { shareCode } },
+    }).then(res => {
+      wx.hideLoading();
+      if (res.result && res.result.success) {
+        wx.showToast({ title: '加入成功', icon: 'success' });
+        this.closeJoinModal();
+        this.loadClassList();
+      } else {
+        wx.showToast({ title: res.result.errMsg || '加入失败', icon: 'none' });
+      }
+    }).catch(err => {
+      wx.hideLoading();
+      wx.showToast({ title: '加入失败', icon: 'none' });
     });
   },
 

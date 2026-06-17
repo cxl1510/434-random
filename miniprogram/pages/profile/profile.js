@@ -3,6 +3,8 @@ const app = getApp();
 Page({
   data: {
     userInfo: {},
+    tempAvatarUrl: '',
+    tempNickName: '',
     roleOptions: [
       { label: '教师', value: 'teacher' },
       { label: '学生', value: 'student' },
@@ -28,21 +30,29 @@ Page({
     });
   },
 
-  getUserProfile() {
-    wx.getUserProfile({
-      desc: '用于完善用户资料',
-      success: (res) => {
-        const { nickName, avatarUrl } = res.userInfo;
-        wx.cloud.callFunction({
-          name: 'userManager',
-          data: {
-            type: 'updateProfile',
-            data: { nickName, avatarUrl },
-          },
-        }).then(() => {
-          this.loadUserInfo();
-        });
-      },
+  onChooseAvatar(e) {
+    this.setData({ tempAvatarUrl: e.detail.avatarUrl });
+  },
+
+  onNicknameInput(e) {
+    this.setData({ tempNickName: e.detail.value });
+  },
+
+  saveProfile() {
+    const { tempAvatarUrl, tempNickName } = this.data;
+    wx.cloud.callFunction({
+      name: 'userManager',
+      data: { type: 'updateProfile', data: { avatarUrl: tempAvatarUrl, nickName: tempNickName } },
+    }).then(res => {
+      if (res.result && res.result.success) {
+        wx.showToast({ title: '保存成功', icon: 'success' });
+        this.setData({ tempAvatarUrl: '', tempNickName: '' });
+        this.loadUserInfo();
+      } else {
+        wx.showToast({ title: res.result.errMsg || '保存失败', icon: 'none' });
+      }
+    }).catch(() => {
+      wx.showToast({ title: '保存失败', icon: 'none' });
     });
   },
 

@@ -21,6 +21,8 @@
 
 button {
   background: initial;
+  color: inherit;
+  font-size: inherit;
 }
 
 button:focus {
@@ -48,14 +50,20 @@ page {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important;
+  color: #fff !important;
   border-radius: 40rpx;
   font-size: 32rpx;
   height: 88rpx;
   line-height: 88rpx;
   text-align: center;
   margin: 20rpx 0;
+  width: 100%;
+  border: none;
+}
+
+.btn-primary[disabled] {
+  opacity: 0.5;
 }
 
 .btn-primary::after {

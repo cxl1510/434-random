@@ -2,6 +2,11 @@
   <view class="class-header">
     <view class="class-title">{{classInfo.name}}</view>
     <view class="class-count">{{studentList.length}} 人</view>
+    <view wx:if="{{classInfo.shareCode}}" class="share-code-row" bindtap="copyShareCode">
+      <text class="share-code-label">分享码：</text>
+      <text class="share-code-value">{{classInfo.shareCode}}</text>
+      <text class="share-code-tip">点击复制</text>
+    </view>
   </view>
 
   <view class="action-bar">
@@ -39,12 +44,12 @@
     </view>
     <view wx:if="{{addMode === 'single'}}">
       <input class="modal-input" placeholder="请输入学生姓名" value="{{newStudentName}}" bindinput="onStudentNameInput" />
-      <button class="btn-primary" bindtap="addStudent">添加</button>
+      <view style="background:#4A90D9;color:#fff;border-radius:40rpx;font-size:32rpx;height:88rpx;line-height:88rpx;text-align:center;margin:20rpx 0;width:100%;" bindtap="addStudent">添加</view>
     </view>
     <view wx:if="{{addMode === 'batch'}}">
       <textarea class="modal-textarea" placeholder="每行一个姓名，如：&#10;张三&#10;李四&#10;王五" value="{{batchNames}}" bindinput="onBatchInput" />
-      <button class="btn-primary" bindtap="batchAddStudents">批量添加</button>
+      <view style="background:#4A90D9;color:#fff;border-radius:40rpx;font-size:32rpx;height:88rpx;line-height:88rpx;text-align:center;margin:20rpx 0;width:100%;" bindtap="batchAddStudents">批量添加</view>
     </view>
-    <button class="btn-cancel" bindtap="closeAddModal">取消</button>
+    <view class="btn-cancel" bindtap="closeAddModal">取消</view>
   </view>
 </view>

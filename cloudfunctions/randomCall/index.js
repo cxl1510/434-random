@@ -35,6 +35,13 @@ async function startRandomCall(data) {
 
 async function saveCallResult(data, openId) {
   try {
+    const existingRes = await db.collection('call_records')
+      .where({ classId: data.classId, studentId: data.studentId })
+      .count();
+    if (existingRes.total > 0) {
+      return { success: false, errMsg: '该学生已有记录' };
+    }
+
     const res = await db.collection('call_records').add({
       data: {
         classId: data.classId,

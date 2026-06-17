@@ -5,7 +5,14 @@
     </view>
     <view class="nickname">{{userInfo.nickName || '未设置昵称'}}</view>
     <view class="role-tag">{{userInfo.role === 'teacher' ? '教师' : '学生'}}</view>
-    <view wx:if="{{!userInfo.nickName}}" class="set-profile" bindtap="getUserProfile">点击设置微信资料</view>
+    <view wx:if="{{!userInfo.nickName}}" class="set-profile">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image src="{{tempAvatarUrl || '/images/avatar.png'}}" class="avatar-small" />
+        选择头像
+      </button>
+      <input class="nickname-input" placeholder="请输入昵称" value="{{tempNickName}}" bindinput="onNicknameInput" />
+      <view class="btn-primary {{!tempAvatarUrl || !tempNickName ? 'disabled' : ''}}" bindtap="saveProfile">保存资料</view>
+    </view>
   </view>
 
   <view class="menu-card">

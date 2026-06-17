@@ -10,9 +10,17 @@ Page({
   },
 
   onLoad(options) {
-    this.setData({ classId: options.classId });
-    this.loadRecords();
-    this.loadStatistics();
+    const app = getApp();
+    const classId = options.classId || app.globalData.currentClassId;
+    this.setData({ classId });
+  },
+
+  onShow() {
+    if (this.data.classId) {
+      this.setData({ recordList: [], pageNum: 1, hasMore: true });
+      this.loadRecords();
+      this.loadStatistics();
+    }
   },
 
   onReachBottom() {

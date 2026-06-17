@@ -30,8 +30,8 @@ async function addStudent(data, openId) {
       return { success: false, errMsg: '学生姓名不能为空' };
     }
     const classRes = await db.collection('classes').doc(data.classId).get();
-    if (classRes.data.creatorOpenId !== openId) {
-      return { success: false, errMsg: '无权限操作' };
+    if (!classRes.data.memberOpenIds.includes(openId)) {
+      return { success: false, errMsg: '您不是该班级成员' };
     }
     const res = await db.collection('students').add({
       data: {
@@ -58,8 +58,8 @@ async function batchAddStudents(data, openId) {
       .map(n => n.trim())
       .filter(n => n);
     const classRes = await db.collection('classes').doc(data.classId).get();
-    if (classRes.data.creatorOpenId !== openId) {
-      return { success: false, errMsg: '无权限操作' };
+    if (!classRes.data.memberOpenIds.includes(openId)) {
+      return { success: false, errMsg: '您不是该班级成员' };
     }
     const batch = [];
     for (const name of names) {
@@ -100,8 +100,8 @@ async function deleteStudent(data, openId) {
     const studentRes = await db.collection('students').doc(data.studentId).get();
     const classId = studentRes.data.classId;
     const classRes = await db.collection('classes').doc(classId).get();
-    if (classRes.data.creatorOpenId !== openId) {
-      return { success: false, errMsg: '无权限操作' };
+    if (!classRes.data.memberOpenIds.includes(openId)) {
+      return { success: false, errMsg: '您不是该班级成员' };
     }
     await db.collection('students').doc(data.studentId).remove();
     await db.collection('classes').doc(classId).update({
@@ -118,8 +118,8 @@ async function updateStudent(data, openId) {
     const studentRes = await db.collection('students').doc(data.studentId).get();
     const classId = studentRes.data.classId;
     const classRes = await db.collection('classes').doc(classId).get();
-    if (classRes.data.creatorOpenId !== openId) {
-      return { success: false, errMsg: '无权限操作' };
+    if (!classRes.data.memberOpenIds.includes(openId)) {
+      return { success: false, errMsg: '您不是该班级成员' };
     }
     await db.collection('students').doc(data.studentId).update({
       data: { name: data.name.trim() },

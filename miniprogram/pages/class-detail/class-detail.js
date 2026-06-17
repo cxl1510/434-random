@@ -153,8 +153,21 @@ Page({
   },
 
   goToHistory() {
-    wx.navigateTo({
-      url: `/pages/history/history?classId=${this.data.classId}`,
+    const app = getApp();
+    app.globalData.currentClassId = this.data.classId;
+    wx.switchTab({
+      url: '/pages/history/history',
+    });
+  },
+
+  copyShareCode() {
+    const shareCode = this.data.classInfo.shareCode;
+    if (!shareCode) return;
+    wx.setClipboardData({
+      data: shareCode,
+      success: () => {
+        wx.showToast({ title: '分享码已复制', icon: 'success' });
+      },
     });
   },
 });

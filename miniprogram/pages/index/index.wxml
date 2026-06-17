@@ -1,7 +1,10 @@
 <view class="container">
   <view class="header">
     <text class="header-title">我的班级</text>
-    <view class="header-action" bindtap="openCreateModal">+ 创建班级</view>
+    <view class="header-actions">
+      <view class="header-action" bindtap="openCreateModal">+ 创建班级</view>
+      <view class="header-action join-btn" bindtap="openJoinModal">加入班级</view>
+    </view>
   </view>
 
   <view wx:if="{{loading}}" class="empty-state">加载中...</view>
@@ -29,6 +32,16 @@
     <view class="modal-actions">
       <button class="modal-btn cancel" bindtap="closeCreateModal">取消</button>
       <button class="modal-btn confirm" bindtap="createClass">确定</button>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showJoinModal}}" bindtap="closeJoinModal"></view>
+  <view class="modal" wx:if="{{showJoinModal}}">
+    <view class="modal-title">加入班级</view>
+    <input class="modal-input" placeholder="请输入6位分享码" value="{{shareCode}}" bindinput="onShareCodeInput" maxlength="6" />
+    <view class="modal-actions">
+      <button class="modal-btn cancel" bindtap="closeJoinModal">取消</button>
+      <button class="modal-btn confirm" bindtap="joinClass">确定</button>
     </view>
   </view>
 </view>
