@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="section">
+    <view class="section-title">外观设置</view>
+    <view class="menu-item" bindtap="switchTheme">
+      <text class="menu-label">深色模式</text>
+      <switch checked="{{theme === 'dark'}}" bindchange="switchTheme" color="#4A90D9" />
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">存储管理</view>
+    <view class="menu-item" bindtap="clearCache">
+      <text class="menu-label">清除缓存</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">关于</view>
+    <view class="about-info">
+      <text class="about-text">课堂随机点名 v1.0</text>
+      <text class="about-text">基于微信云开发</text>
+    </view>
+  </view>
+</view>

@@ -10,9 +10,11 @@
         <image src="{{tempAvatarUrl || '/images/avatar.png'}}" class="avatar-small" />
         选择头像
       </button>
+      <view class="upload-link" bindtap="uploadCustomAvatar">上传自定义头像</view>
       <input class="nickname-input" placeholder="请输入昵称" value="{{tempNickName}}" bindinput="onNicknameInput" />
       <view class="btn-primary {{!tempAvatarUrl || !tempNickName ? 'disabled' : ''}}" bindtap="saveProfile">保存资料</view>
     </view>
+    <view class="btn-primary" bindtap="chooseWechatProfile" style="margin-top: 16rpx;">获取微信资料</view>
   </view>
 
   <view class="menu-card">
@@ -22,6 +24,30 @@
         class="role-item {{userInfo.role === item.value ? 'active' : ''}}"
         bindtap="changeRole" data-value="{{item.value}}">
         {{item.label}}
+      </view>
+    </view>
+  </view>
+
+  <view class="stats-card">
+    <view class="stats-title">我的班级</view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{myClassStats.created}}</text>
+        <text class="stat-label">创建的班级</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{myClassStats.joined}}</text>
+        <text class="stat-label">加入的班级</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="stats-card">
+    <view class="stats-title">我的记录</view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{myRecordCount}}</text>
+        <text class="stat-label">点名记录(次)</text>
       </view>
     </view>
   </view>

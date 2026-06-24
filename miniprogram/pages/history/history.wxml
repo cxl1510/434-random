@@ -1,48 +1,52 @@
-<wxs src="../../utils/dateUtil.wxs" module="dateUtil" />
 <view class="container">
-  <view class="stat-card">
-    <view class="stat-row">
-      <view class="stat-item">
-        <view class="stat-num">{{statistics.total || 0}}</view>
-        <view class="stat-label">总点名</view>
-      </view>
-      <view class="stat-item">
-        <view class="stat-num" style="color:#34C759">{{statistics.present || 0}}</view>
-        <view class="stat-label">已到</view>
-      </view>
-      <view class="stat-item">
-        <view class="stat-num" style="color:#FF3B30">{{statistics.absent || 0}}</view>
-        <view class="stat-label">未到</view>
-      </view>
-      <view class="stat-item">
-        <view class="stat-num" style="color:#FF9500">{{statistics.leave || 0}}</view>
-        <view class="stat-label">请假</view>
-      </view>
-    </view>
-    <view class="stat-rate">出勤率：{{statistics.presentRate || 0}}%</view>
-  </view>
+  <view wx:if="{{loading && sessionList.length === 0}}" class="empty-state">加载中...</view>
 
-  <view class="section-title">点名记录</view>
-
-  <view wx:if="{{loading && recordList.length === 0}}" class="empty-state">加载中...</view>
-
-  <view wx:elif="{{recordList.length === 0}}" class="empty-state">
+  <view wx:elif="{{sessionList.length === 0}}" class="empty-state">
     <text>暂无记录</text>
   </view>
 
-  <view wx:else class="record-list">
-    <view wx:for="{{recordList}}" wx:key="_id" class="record-item">
-      <view class="record-left">
-        <view class="record-name">{{item.studentName}}</view>
-        <view class="record-time">{{dateUtil.formatDate(item.callTime)}}</view>
+  <view wx:else class="session-list">
+    <view wx:for="{{sessionList}}" wx:key="sessionId" class="session-item">
+      <view class="session-header" bindtap="toggleSession" data-idx="{{index}}">
+        <view class="session-info-left">
+          <view class="session-title">第 {{sessionList.length - index}} 轮</view>
+          <view class="session-meta">{{item.count}} 人 · {{item.time}}</view>
+        </view>
+        <view class="session-arrow {{item.expanded ? 'expanded' : ''}}">›</view>
       </view>
-      <view class="record-result {{item.result}}">
-        <text wx:if="{{item.result === 'present'}}">已到</text>
-        <text wx:if="{{item.result === 'absent'}}">未到</text>
-        <text wx:if="{{item.result === 'leave'}}">请假</text>
+
+      <view class="session-stat-bar">
+        <view class="mini-stat">
+          <text class="mini-num">{{item.statistics.total}}</text>
+          <text class="mini-label">总</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-num green">{{item.statistics.present}}</text>
+          <text class="mini-label">已到</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-num red">{{item.statistics.absent}}</text>
+          <text class="mini-label">未到</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-num orange">{{item.statistics.leave}}</text>
+          <text class="mini-label">请假</text>
+        </view>
+        <view class="mini-rate">出勤率 {{item.statistics.presentRate}}%</view>
+      </view>
+
+      <view wx:if="{{item.expanded}}" class="session-records">
+        <view wx:for="{{item.records}}" wx:for-item="record" wx:key="_id" class="record-item">
+          <view class="record-left">
+            <view class="record-name">{{record.studentName}}</view>
+          </view>
+          <view class="record-result {{record.result}}">
+            <text wx:if="{{record.result === 'present'}}">已到</text>
+            <text wx:if="{{record.result === 'absent'}}">未到</text>
+            <text wx:if="{{record.result === 'leave'}}">请假</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
-
-  <view wx:if="{{!hasMore && recordList.length > 0}}" class="no-more">没有更多了</view>
 </view>

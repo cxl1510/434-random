@@ -4,6 +4,7 @@ Page({
     classInfo: {},
     studentList: [],
     showAddModal: false,
+    showShareModal: false,
     newStudentName: '',
     batchNames: '',
     addMode: 'single',
@@ -28,6 +29,8 @@ Page({
       if (res.result && res.result.success) {
         this.setData({ classInfo: res.result.data });
       }
+    }).catch(() => {
+      wx.showToast({ title: '加载失败，请重试', icon: 'none' });
     });
   },
 
@@ -40,6 +43,8 @@ Page({
       if (res.result && res.result.success) {
         this.setData({ studentList: res.result.data || [] });
       }
+    }).catch(() => {
+      wx.showToast({ title: '加载失败，请重试', icon: 'none' });
     }).finally(() => {
       this.setData({ loading: false });
     });
@@ -136,6 +141,8 @@ Page({
             } else {
               wx.showToast({ title: res.result.errMsg || '删除失败', icon: 'none' });
             }
+          }).catch(() => {
+            wx.showToast({ title: '删除失败', icon: 'none' });
           });
         }
       },
@@ -167,6 +174,66 @@ Page({
       data: shareCode,
       success: () => {
         wx.showToast({ title: '分享码已复制', icon: 'success' });
+      },
+    });
+  },
+
+  shareClass() {
+    this.setData({ showShareModal: true });
+  },
+
+  closeModals() {
+    this.setData({ showAddModal: false, showShareModal: false });
+  },
+
+  shareToFriend() {
+    wx.showShareMenu({
+      withShareTicket: true,
+      success: () => {
+        wx.showToast({ title: '请点击右上角菜单分享', icon: 'none', duration: 2500 });
+      },
+    });
+  },
+
+  onShareAppMessage() {
+    return {
+      title: `邀请你加入班级：${this.data.classInfo.name}`,
+      path: `/pages/index/index`,
+      imageUrl: '',
+    };
+  },
+
+  uploadStudentAvatar(e) {
+    const studentId = e.currentTarget.dataset.id;
+    const studentName = e.currentTarget.dataset.name;
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const tempFilePath = res.tempFiles[0].tempFilePath;
+        wx.showLoading({ title: '上传中' });
+        const cloudPath = `avatars/student_${studentId}_${Date.now()}.jpg`;
+        wx.cloud.uploadFile({
+          cloudPath,
+          filePath: tempFilePath,
+        }).then(uploadRes => {
+          return wx.cloud.callFunction({
+            name: 'studentManager',
+            data: { type: 'updateStudentAvatar', data: { studentId, fileID: uploadRes.fileID } },
+          });
+        }).then(res => {
+          wx.hideLoading();
+          if (res.result && res.result.success) {
+            wx.showToast({ title: '上传成功', icon: 'success' });
+            this.loadStudentList();
+          } else {
+            wx.showToast({ title: res.result.errMsg || '上传失败', icon: 'none' });
+          }
+        }).catch(() => {
+          wx.hideLoading();
+          wx.showToast({ title: '上传失败', icon: 'none' });
+        });
       },
     });
   },

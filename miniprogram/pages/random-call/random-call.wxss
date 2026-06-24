@@ -8,6 +8,31 @@
   box-sizing: border-box;
 }
 
+.session-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 20rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.new-session-btn {
+  color: #4A90D9;
+  font-size: 28rpx;
+  padding: 8rpx 20rpx;
+  border: 1rpx solid #4A90D9;
+  border-radius: 24rpx;
+}
+
+.all-called-tip {
+  color: #34C759;
+  font-size: 30rpx;
+  font-weight: bold;
+  padding-bottom: 40rpx;
+}
+
 .roll-stage {
   flex: 1;
   display: flex;

@@ -1,4 +1,5 @@
 <view class="container">
+  <view class="greeting">你好, {{userName || '同学'}}</view>
   <view class="header">
     <text class="header-title">我的班级</text>
     <view class="header-actions">

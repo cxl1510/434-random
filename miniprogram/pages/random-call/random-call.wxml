@@ -1,9 +1,18 @@
 <view class="container">
+  <view class="session-info">
+    <text>本轮进度：{{calledCount}} / {{totalStudents}}</text>
+    <text class="new-session-btn" bindtap="startNewSessionBtn">新一轮</text>
+  </view>
+
   <view class="roll-stage">
     <view class="roll-name {{isRolling ? 'rolling' : ''}}">{{currentName || '准备就绪'}}</view>
   </view>
 
-  <view wx:if="{{!showResult}}" class="roll-controls">
+  <view wx:if="{{allCalled}}" class="all-called-tip">
+    <text>本轮全部学生已点完</text>
+  </view>
+
+  <view wx:elif="{{!showResult}}" class="roll-controls">
     <view class="start-btn {{isRolling ? 'disabled' : ''}}" bindtap="startRoll">
       {{isRolling ? '点名中...' : '开始点名'}}
     </view>

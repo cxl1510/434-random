@@ -4,7 +4,8 @@
     "pages/class-detail/class-detail",
     "pages/random-call/random-call",
     "pages/history/history",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/settings/settings"
   ],
   "window": {
     "backgroundColor": "#F5F7FA",

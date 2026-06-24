@@ -19,6 +19,8 @@ exports.main = async (event, context) => {
       return await deleteStudent(data, openId);
     case 'updateStudent':
       return await updateStudent(data, openId);
+    case 'updateStudentAvatar':
+      return await updateStudentAvatar(data, openId);
     default:
       return { success: false, errMsg: '未知操作类型' };
   }
@@ -123,6 +125,23 @@ async function updateStudent(data, openId) {
     }
     await db.collection('students').doc(data.studentId).update({
       data: { name: data.name.trim() },
+    });
+    return { success: true };
+  } catch (e) {
+    return { success: false, errMsg: e.message || e };
+  }
+}
+
+async function updateStudentAvatar(data, openId) {
+  try {
+    const studentRes = await db.collection('students').doc(data.studentId).get();
+    const classId = studentRes.data.classId;
+    const classRes = await db.collection('classes').doc(classId).get();
+    if (!classRes.data.memberOpenIds.includes(openId)) {
+      return { success: false, errMsg: '您不是该班级成员' };
+    }
+    await db.collection('students').doc(data.studentId).update({
+      data: { avatar: data.fileID },
     });
     return { success: true };
   } catch (e) {

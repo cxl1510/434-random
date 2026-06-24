@@ -12,6 +12,7 @@
   <view class="action-bar">
     <view class="action-btn primary" bindtap="goToRandomCall">开始点名</view>
     <view class="action-btn" bindtap="goToHistory">历史记录</view>
+    <view class="action-btn" bindtap="shareClass">分享班级</view>
   </view>
 
   <view class="section-title">
@@ -28,14 +29,30 @@
   <view wx:else class="student-list">
     <view wx:for="{{studentList}}" wx:key="_id" class="student-item">
       <view class="student-info">
-        <image class="student-avatar" src="{{item.avatar || '/images/avatar.png'}}" />
+        <image class="student-avatar" src="{{item.avatar || '/images/avatar.png'}}" bindtap="uploadStudentAvatar" data-id="{{item._id}}" data-name="{{item.name}}" />
         <text class="student-name">{{item.name}}</text>
       </view>
       <text class="delete-btn" catchtap="deleteStudent" data-id="{{item._id}}">删除</text>
     </view>
   </view>
 
-  <view class="modal-mask" wx:if="{{showAddModal}}" bindtap="closeAddModal"></view>
+  <view class="modal-mask" wx:if="{{showAddModal || showShareModal}}" bindtap="closeModals"></view>
+  <view class="modal share-modal" wx:if="{{showShareModal}}">
+    <view class="modal-title">分享班级</view>
+    <view class="share-code-display">
+      <text class="share-code-text" wx:if="{{classInfo.shareCode}}">{{classInfo.shareCode}}</text>
+      <text class="share-code-text" wx:else>加载中...</text>
+    </view>
+    <view class="share-tips">
+      <text>他人输入此分享码即可加入班级</text>
+    </view>
+    <view class="share-actions">
+      <view class="share-action-btn" bindtap="copyShareCode">复制分享码</view>
+      <view class="share-action-btn primary" bindtap="shareToFriend">分享给微信好友</view>
+    </view>
+    <view class="share-hint">提示：也可点击右上角菜单分享</view>
+    <view class="btn-cancel" bindtap="closeModals">关闭</view>
+  </view>
   <view class="modal" wx:if="{{showAddModal}}">
     <view class="modal-title">添加学生</view>
     <view class="mode-switch">

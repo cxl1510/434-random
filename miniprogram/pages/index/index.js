@@ -8,6 +8,7 @@ Page({
     showJoinModal: false,
     shareCode: '',
     loading: false,
+    userName: '',
   },
 
   onLoad() {
@@ -22,6 +23,11 @@ Page({
     wx.cloud.callFunction({
       name: 'userManager',
       data: { type: 'login' },
+    }).then(res => {
+      if (res.result && res.result.success) {
+        const user = res.result.data;
+        this.setData({ userName: user.nickName || '' });
+      }
     }).catch(() => {});
   },
 
@@ -34,6 +40,8 @@ Page({
       if (res.result && res.result.success) {
         this.setData({ classList: res.result.data || [] });
       }
+    }).catch(() => {
+      wx.showToast({ title: '加载失败，请重试', icon: 'none' });
     }).finally(() => {
       this.setData({ loading: false });
     });

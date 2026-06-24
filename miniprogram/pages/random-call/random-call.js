@@ -7,6 +7,10 @@ Page({
     selectedStudent: null,
     showResult: false,
     rollInterval: null,
+    sessionId: '',
+    calledCount: 0,
+    totalStudents: 0,
+    allCalled: false,
     resultOptions: [
       { label: '已到', value: 'present', color: '#34C759' },
       { label: '未到', value: 'absent', color: '#FF3B30' },
@@ -17,6 +21,7 @@ Page({
   onLoad(options) {
     this.setData({ classId: options.classId });
     this.loadStudentList();
+    this.startNewSession();
   },
 
   onUnload() {
@@ -32,10 +37,21 @@ Page({
     }).then(res => {
       if (res.result && res.result.success) {
         const list = res.result.data || [];
-        this.setData({ studentList: list });
-        if (list.length) {
-          this.setData({ currentName: list[0].name });
-        }
+        this.setData({ studentList: list, totalStudents: list.length });
+      }
+    }).catch(() => {
+      wx.showToast({ title: '加载失败，请重试', icon: 'none' });
+    });
+  },
+
+  // 开始新一轮
+  startNewSession() {
+    wx.cloud.callFunction({
+      name: 'randomCall',
+      data: { type: 'startNewSession' },
+    }).then(res => {
+      if (res.result && res.result.success) {
+        this.setData({ sessionId: res.result.data.sessionId, calledCount: 0, allCalled: false });
       }
     });
   },
@@ -44,6 +60,22 @@ Page({
     if (this.data.isRolling) return;
     if (this.data.studentList.length === 0) {
       wx.showToast({ title: '暂无学生', icon: 'none' });
+      return;
+    }
+    if (this.data.allCalled) {
+      wx.showModal({
+        title: '提示',
+        content: '本轮所有学生都已点过，是否开始新一轮？',
+        confirmText: '新一轮',
+        success: (res) => {
+          if (res.confirm) {
+            this.startNewSession();
+            setTimeout(() => {
+              this.startRoll();
+            }, 500);
+          }
+        },
+      });
       return;
     }
     this.setData({ isRolling: true, showResult: false, selectedStudent: null });
@@ -61,14 +93,32 @@ Page({
     if (this.data.rollInterval) {
       clearInterval(this.data.rollInterval);
     }
-    const idx = Math.floor(Math.random() * this.data.studentList.length);
-    const student = this.data.studentList[idx];
-    this.setData({
-      isRolling: false,
-      currentName: student.name,
-      selectedStudent: student,
-      showResult: true,
-      rollInterval: null,
+    // 从云端获取未点过的学生并随机选一个
+    wx.cloud.callFunction({
+      name: 'randomCall',
+      data: {
+        type: 'startRandomCall',
+        data: { classId: this.data.classId, sessionId: this.data.sessionId },
+      },
+    }).then(res => {
+      this.setData({ isRolling: false, rollInterval: null });
+      if (res.result && res.result.success) {
+        const student = res.result.data;
+        this.setData({
+          currentName: student.name,
+          selectedStudent: student,
+          showResult: true,
+          calledCount: this.data.totalStudents - res.result.remaining,
+        });
+      } else if (res.result && res.result.allCalled) {
+        this.setData({ allCalled: true, showResult: false, selectedStudent: null });
+        wx.showToast({ title: '本轮全部已点', icon: 'none' });
+      } else {
+        wx.showToast({ title: res.result?.errMsg || '点名失败', icon: 'none' });
+      }
+    }).catch(() => {
+      this.setData({ isRolling: false, rollInterval: null });
+      wx.showToast({ title: '点名失败，请重试', icon: 'none' });
     });
   },
 
@@ -83,6 +133,7 @@ Page({
         type: 'saveCallResult',
         data: {
           classId: this.data.classId,
+          sessionId: this.data.sessionId,
           studentId: student._id,
           studentName: student.name,
           result,
@@ -93,7 +144,13 @@ Page({
       wx.hideLoading();
       if (res.result && res.result.success) {
         wx.showToast({ title: '记录已保存', icon: 'success' });
-        this.setData({ showResult: false, selectedStudent: null });
+        const newCount = this.data.calledCount + 1;
+        if (newCount >= this.data.totalStudents) {
+          this.setData({ allCalled: true, showResult: false, selectedStudent: null, calledCount: newCount });
+          wx.showToast({ title: '本轮点名完成', icon: 'success' });
+        } else {
+          this.setData({ showResult: false, selectedStudent: null, calledCount: newCount });
+        }
       } else {
         wx.showToast({ title: res.result.errMsg || '保存失败', icon: 'none' });
       }
@@ -108,5 +165,19 @@ Page({
     setTimeout(() => {
       this.startRoll();
     }, 200);
+  },
+
+  startNewSessionBtn() {
+    wx.showModal({
+      title: '确认',
+      content: '确定开始新一轮点名？本轮记录将保留。',
+      success: (res) => {
+        if (res.confirm) {
+          this.startNewSession();
+          this.setData({ currentName: '准备就绪' });
+          wx.showToast({ title: '已开始新一轮', icon: 'success' });
+        }
+      },
+    });
   },
 });

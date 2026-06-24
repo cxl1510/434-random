@@ -199,3 +199,66 @@
 .btn-primary.disabled {
   opacity: 0.5;
 }
+
+/* 分享弹窗样式 */
+.share-modal {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.share-code-display {
+  background: linear-gradient(135deg, #4A90D9, #5AC8FA);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+
+.share-code-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 8rpx;
+}
+
+.share-code-text.placeholder {
+  font-size: 30rpx;
+  font-weight: normal;
+  letter-spacing: normal;
+}
+
+.share-tips {
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+  margin-bottom: 30rpx;
+}
+
+.share-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.share-action-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border-radius: 40rpx;
+  background: #F5F7FA;
+  color: #333;
+  font-size: 28rpx;
+}
+
+.share-action-btn.primary {
+  background: #4A90D9;
+  color: #fff;
+}
+
+.share-hint {
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+  margin-bottom: 20rpx;
+}
