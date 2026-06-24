@@ -1,49 +1,59 @@
 <view class="container">
-  <view wx:if="{{loading && sessionList.length === 0}}" class="empty-state">加载中...</view>
+  <view wx:if="{{loading && classList.length === 0}}" class="empty-state">加载中...</view>
 
-  <view wx:elif="{{sessionList.length === 0}}" class="empty-state">
+  <view wx:elif="{{classList.length === 0}}" class="empty-state">
     <text>暂无记录</text>
   </view>
 
-  <view wx:else class="session-list">
-    <view wx:for="{{sessionList}}" wx:key="sessionId" class="session-item">
-      <view class="session-header" bindtap="toggleSession" data-idx="{{index}}">
-        <view class="session-info-left">
-          <view class="session-title">第 {{sessionList.length - index}} 轮</view>
-          <view class="session-meta">{{item.count}} 人 · {{item.time}}</view>
-        </view>
-        <view class="session-arrow {{item.expanded ? 'expanded' : ''}}">›</view>
+  <view wx:else class="class-list">
+    <view wx:for="{{classList}}" wx:key="classId" class="class-group">
+      <view class="class-header" bindtap="toggleClass" data-idx="{{index}}">
+        <view class="class-name">{{item.className}}</view>
+        <view class="class-meta">{{item.totalSessions}} 轮记录</view>
+        <view class="class-arrow {{item.expanded ? 'expanded' : ''}}">›</view>
       </view>
 
-      <view class="session-stat-bar">
-        <view class="mini-stat">
-          <text class="mini-num">{{item.statistics.total}}</text>
-          <text class="mini-label">总</text>
-        </view>
-        <view class="mini-stat">
-          <text class="mini-num green">{{item.statistics.present}}</text>
-          <text class="mini-label">已到</text>
-        </view>
-        <view class="mini-stat">
-          <text class="mini-num red">{{item.statistics.absent}}</text>
-          <text class="mini-label">未到</text>
-        </view>
-        <view class="mini-stat">
-          <text class="mini-num orange">{{item.statistics.leave}}</text>
-          <text class="mini-label">请假</text>
-        </view>
-        <view class="mini-rate">出勤率 {{item.statistics.presentRate}}%</view>
-      </view>
-
-      <view wx:if="{{item.expanded}}" class="session-records">
-        <view wx:for="{{item.records}}" wx:for-item="record" wx:key="_id" class="record-item">
-          <view class="record-left">
-            <view class="record-name">{{record.studentName}}</view>
+      <view wx:if="{{item.expanded}}" class="session-list">
+        <view wx:for="{{item.sessions}}" wx:for-item="session" wx:for-index="sIdx" wx:key="sessionId" class="session-item">
+          <view class="session-header" bindtap="toggleSession" data-class-idx="{{index}}" data-session-idx="{{sIdx}}">
+            <view class="session-info-left">
+              <view class="session-title">第 {{item.sessions.length - sIdx}} 轮</view>
+              <view class="session-meta">{{session.count}} 人 · {{session.time}}</view>
+            </view>
+            <view class="session-arrow {{session.expanded ? 'expanded' : ''}}">›</view>
           </view>
-          <view class="record-result {{record.result}}">
-            <text wx:if="{{record.result === 'present'}}">已到</text>
-            <text wx:if="{{record.result === 'absent'}}">未到</text>
-            <text wx:if="{{record.result === 'leave'}}">请假</text>
+
+          <view class="session-stat-bar">
+            <view class="mini-stat">
+              <text class="mini-num">{{session.statistics.total}}</text>
+              <text class="mini-label">总</text>
+            </view>
+            <view class="mini-stat">
+              <text class="mini-num green">{{session.statistics.present}}</text>
+              <text class="mini-label">已到</text>
+            </view>
+            <view class="mini-stat">
+              <text class="mini-num red">{{session.statistics.absent}}</text>
+              <text class="mini-label">未到</text>
+            </view>
+            <view class="mini-stat">
+              <text class="mini-num orange">{{session.statistics.leave}}</text>
+              <text class="mini-label">请假</text>
+            </view>
+            <view class="mini-rate">出勤率 {{session.statistics.presentRate}}%</view>
+          </view>
+
+          <view wx:if="{{session.expanded}}" class="session-records">
+            <view wx:for="{{session.records}}" wx:for-item="record" wx:key="_id" class="record-item">
+              <view class="record-left">
+                <view class="record-name">{{record.studentName}}</view>
+              </view>
+              <view class="record-result {{record.result}}">
+                <text wx:if="{{record.result === 'present'}}">已到</text>
+                <text wx:if="{{record.result === 'absent'}}">未到</text>
+                <text wx:if="{{record.result === 'leave'}}">请假</text>
+              </view>
+            </view>
           </view>
         </view>
       </view>

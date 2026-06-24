@@ -12,6 +12,88 @@
   font-size: 28rpx;
 }
 
+/* 班级分组 */
+.class-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.class-group {
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.class-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 30rpx;
+  background: #4A90D9;
+  color: #fff;
+}
+
+.class-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  flex: 1;
+}
+
+.class-meta {
+  font-size: 24rpx;
+  opacity: 0.8;
+  margin-right: 12rpx;
+}
+
+.class-arrow {
+  font-size: 36rpx;
+  color: #fff;
+  transition: transform 0.3s;
+}
+
+.class-arrow.expanded {
+  transform: rotate(90deg);
+}
+
+/* 班级下的 session 列表 */
+.class-group .session-list {
+  display: flex;
+  flex-direction: column;
+  padding: 16rpx;
+  gap: 12rpx;
+}
+
+.class-group .session-item {
+  background: #F9FAFB;
+  border-radius: 12rpx;
+  box-shadow: 0 1rpx 6rpx rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+
+.class-group .session-header {
+  padding: 16rpx 20rpx 12rpx;
+}
+
+.class-group .session-title {
+  font-size: 28rpx;
+}
+
+.class-group .session-meta {
+  font-size: 22rpx;
+}
+
+.class-group .session-stat-bar {
+  padding: 12rpx 20rpx;
+  background: #fff;
+  border-radius: 0;
+}
+
+.class-group .session-records {
+  padding: 0 20rpx;
+}
+
 .session-list {
   display: flex;
   flex-direction: column;
